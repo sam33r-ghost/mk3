@@ -1,11 +1,11 @@
-/*package com.Attendance.vision;
+package com.Attendance.vision;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import javax.swing.JFrame;
 
-public class LiveCameraWindow {
-    public static void main(String[] args) {
+public class WebcamApp {
+    public  WebcamApp(){
         Webcam webcam = Webcam.getDefault();
 
         // Create a panel that constantly updates with the live feed
@@ -22,4 +22,4 @@ public class LiveCameraWindow {
         window.pack();
         window.setVisible(true);
     }
-}*/
+}

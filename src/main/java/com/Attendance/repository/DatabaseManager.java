@@ -1,4 +1,4 @@
-package com.Attendance.repository;
+/*package com.Attendance.repository;
 
 import com.Attendance.model.Attendance;
 import com.Attendance.model.AttendanceRecord;
@@ -18,4 +18,4 @@ public class DatabaseManager {
     List AttendanceRecord getAttendanceByStudent(String studentID){}
     List AttendanceRecord getAttendanceBySubject(String subjectID){}
     Student getStudentByFaceEncoding(byte[] encoding){}
-}
+}*/

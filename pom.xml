@@ -103,6 +103,12 @@
             <artifactId>webcam-capture</artifactId>
             <version>0.3.12</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.opencv</groupId>
+            <artifactId>opencv</artifactId>
+            <version>4.12.0</version>
+            <scope>system</scope>
+            <systemPath>C:\opencv\build\java\opencv-4120.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

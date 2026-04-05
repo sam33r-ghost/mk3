@@ -49,10 +49,9 @@ public final class RetinaFaceDetection {
         logger.info("{}", detection);
     }*/
 
-    public static DetectedObjects predict() throws IOException, ModelException, TranslateException {
-        Path facePath;
-        facePath = Paths.get("src/main/java/com/Attendance/vision/AMBD11.jpg");
-        Image img = ImageFactory.getInstance().fromFile(facePath);
+    public static DetectedObjects predict(Path i) throws IOException, ModelException, TranslateException {
+
+        Image img = ImageFactory.getInstance().fromFile(i);
 
         double confThresh = 0.85f;
         double nmsThresh = 0.45f;
