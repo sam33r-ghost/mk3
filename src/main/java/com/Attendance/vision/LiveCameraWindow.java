@@ -1,4 +1,4 @@
-package com.Attendance.vision;
+/*package com.Attendance.vision;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
@@ -22,4 +22,4 @@ public class LiveCameraWindow {
         window.pack();
         window.setVisible(true);
     }
-}
+}*/
