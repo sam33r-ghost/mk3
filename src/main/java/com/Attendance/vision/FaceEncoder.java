@@ -113,6 +113,10 @@ public class FaceEncoder {
             throws Exception {
         return similarity(encodeFace(path1), encodeFace(path2)) >= threshold;
     }
+    public static boolean isSamePerson(byte[] byte1, String path2, double threshold)
+            throws Exception {
+        return similarity(byte1, encodeFace(path2)) >= threshold;
+    }
 
     private static float[] hwcToNchw(Mat mat) {
         int h = mat.rows(), w = mat.cols(), c = mat.channels();

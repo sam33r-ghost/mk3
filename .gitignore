@@ -4,6 +4,8 @@ target/
 !**/src/test/**/target/
 .kotlin
 
+
+photos
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

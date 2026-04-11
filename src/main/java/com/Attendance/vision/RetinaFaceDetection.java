@@ -62,10 +62,12 @@ public final class RetinaFaceDetection {
         FaceDetectionTranslator translator =
                 new FaceDetectionTranslator(confThresh, nmsThresh, variance, topK, scales, steps);
 
+        Path localModelDir = Paths.get("C:\\models\\retinaface.pt");
+
         Criteria<Image, DetectedObjects> criteria =
                 Criteria.builder()
                         .setTypes(Image.class, DetectedObjects.class)
-                        .optModelUrls("https://resources.djl.ai/test-models/pytorch/retinaface.zip")
+                        .optModelPath(localModelDir)
                         // Load model from local file, e.g:
                         .optModelName("retinaface") // specify model file prefix
                         .optTranslator(translator)

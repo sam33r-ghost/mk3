@@ -13,10 +13,10 @@ import ai.djl.modality.cv.ImageFactory;
 import java.io.IOException;
 
 public class ImageSplice {
-    public static void splice(String s) throws IOException, ModelException, TranslateException {
+    public static void splice(String s, DetectedObjects detection) throws IOException, ModelException, TranslateException {
         Path p = Paths.get(s);
         Image img = ImageFactory.getInstance().fromFile(p);
-            DetectedObjects detection = RetinaFaceDetection.predict(p);
+
             int faceCounter = 0;
 
         while (faceCounter< detection.getNumberOfObjects()) {
@@ -61,6 +61,23 @@ public class ImageSplice {
                     System.out.println("Failed to save face " + faceCounter);
                     e.printStackTrace();
                 }
+
+            Path output = Paths.get("extracted/face_" + faceCounter + ".png");
+
+            try {
+                // Create the directory if it doesn't exist yet
+                if (output.getParent() != null) {
+                    Files.createDirectories(output.getParent());
+                }
+
+                // Write the image file
+                try (OutputStream os = Files.newOutputStream(output)) {
+                    croppedFace.save(os, "png");
+                }
+            } catch (Exception e) {
+                System.out.println("Failed to save face " + faceCounter);
+                e.printStackTrace();
+            }
 
                 faceCounter++;
             }
