@@ -17,14 +17,14 @@ public class FaceEncoder {
 
     static {
         try {
-            System.load("C:\\opencv\\build\\java\\x64\\opencv_java4120.dll");
+            System.load("opencv_java4120.dll");
 
             env = OrtEnvironment.getEnvironment();
             OrtSession.SessionOptions opts = new OrtSession.SessionOptions();
             opts.setIntraOpNumThreads(4);
 
             // Direct absolute path — no classpath needed
-            String modelPath = "D:\\College\\Semester 2\\OOPs\\VisionAttendanceM\\src\\main\\resources\\models\\w600k_r50.onnx";
+            String modelPath = "src/main/resources/models/w600k_r50.onnx";
 
             session = env.createSession(modelPath, opts);
             System.out.println("✅ ArcFace model loaded successfully.");

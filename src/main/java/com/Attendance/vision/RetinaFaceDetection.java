@@ -62,7 +62,7 @@ public final class RetinaFaceDetection {
         FaceDetectionTranslator translator =
                 new FaceDetectionTranslator(confThresh, nmsThresh, variance, topK, scales, steps);
 
-        Path localModelDir = Paths.get("C:\\models\\retinaface.pt");
+        Path localModelDir = Paths.get("src/main/resources/models/retinaface.pt");
 
         Criteria<Image, DetectedObjects> criteria =
                 Criteria.builder()
