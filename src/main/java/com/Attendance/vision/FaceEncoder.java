@@ -17,7 +17,7 @@ public class FaceEncoder {
 
     static {
         try {
-            System.load("opencv_java4120.dll");
+            System.load("src/main/resources/models/opencv_java4120.dll");
 
             env = OrtEnvironment.getEnvironment();
             OrtSession.SessionOptions opts = new OrtSession.SessionOptions();
