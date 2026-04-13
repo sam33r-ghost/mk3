@@ -1,4 +1,6 @@
-package com.Attendance.vision;
+package com.Attendance.database;
+
+import com.Attendance.vision.FaceEncoder;
 
 import javax.swing.*;
 import java.awt.*;

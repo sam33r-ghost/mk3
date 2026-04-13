@@ -1,4 +1,4 @@
-package com.Attendance.vision;
+package com.Attendance.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.Attendance.model.Student;
 
 public  class loadData {
 
@@ -19,8 +20,8 @@ public  class loadData {
      * Loads student records from the database into an ArrayList.
      * * @return ArrayList containing Student objects
      */
-    public static List<Student> loadStudents() {
-        List<Student> studentList = new ArrayList<>();
+    public static List<com.Attendance.model.Student> loadStudents() {
+        List<com.Attendance.model.Student> studentList = new ArrayList<>();
 
         // SQL query - replace column and table names with your actual schema
         String query = "SELECT roll_no, name, profile_picture FROM students";
@@ -40,7 +41,7 @@ public  class loadData {
                 byte[] data = rs.getBytes("profile_picture");
 
                 // Create a new Student object and add it to the list
-                Student student = new Student(rollNo, name, data);
+                Student student = new com.Attendance.model.Student(rollNo, name, data);
                 studentList.add(student);
             }
 

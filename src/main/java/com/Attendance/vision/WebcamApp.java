@@ -1,31 +1,32 @@
 package com.Attendance.vision;
 
-import ai.djl.ModelException;
-import ai.djl.translate.TranslateException;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.imgcodecs.Imgcodecs;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.IOException;
+import java.util.function.Consumer;
 
 public class WebcamApp extends JFrame {
 
     static {
-        // Note: Use System.load() instead of loadLibrary(), and provide the full path including the .dll file
         System.load("C:\\opencv\\build\\java\\x64\\opencv_java4120.dll");
     }
 
     private JLabel displayLabel;
     private VideoCapture capture;
     private Mat currentFrame;
+    private Consumer<String> onPhotoCaptured; // This handles passing the data back!
 
-    public WebcamApp() {
+    // Constructor now requires the callback function
+    public WebcamApp(Consumer<String> onPhotoCaptured) {
+        this.onPhotoCaptured = onPhotoCaptured;
+
         setTitle("AI Camera Capture");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         displayLabel = new JLabel();
@@ -35,17 +36,13 @@ public class WebcamApp extends JFrame {
         shootButton.setFont(new Font("Arial", Font.BOLD, 18));
         shootButton.setBackground(Color.RED);
         shootButton.setForeground(Color.WHITE);
+        shootButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Action Listener for the button
         shootButton.addActionListener(e -> {
             try {
                 savePhoto();
-            } catch (ModelException ex) {
-                throw new RuntimeException(ex);
-            } catch (TranslateException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
         add(shootButton, BorderLayout.SOUTH);
@@ -55,42 +52,55 @@ public class WebcamApp extends JFrame {
 
         if (!capture.isOpened()) {
             JOptionPane.showMessageDialog(this, "Cannot access webcam!");
-            System.exit(0);
+            dispose();
+            return;
         }
 
-        // Thread to update the live preview
+        // Properly release camera if user closes window using the 'X' button
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (capture != null && capture.isOpened()) {
+                    capture.release();
+                }
+            }
+        });
+
         new Thread(this::updatePreview).start();
 
         pack();
         setSize(800, 600);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void updatePreview() {
-        while (capture.read(currentFrame)) {
-            // Convert Mat to Image and display it
+        while (capture.isOpened() && capture.read(currentFrame)) {
             ImageIcon icon = new ImageIcon(matToBufferedImage(currentFrame));
             displayLabel.setIcon(icon);
             displayLabel.repaint();
         }
     }
 
-    private void savePhoto() throws ModelException, TranslateException, IOException {
+    private void savePhoto() {
         if (currentFrame != null && !currentFrame.empty()) {
-            Imgcodecs.imwrite("AI.jpg", currentFrame);
-            try {
-                Pipeline.pipe("AI.jpg");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            String imagePath = "AI.jpg";
+            Imgcodecs.imwrite(imagePath, currentFrame);
+
+            // Release the camera hardware so it's free for the next time!
+            if (capture != null && capture.isOpened()) {
+                capture.release();
             }
+            dispose(); // Close the webcam window
 
-
+            // Send the image path back to the AttendanceSystem
+            if (onPhotoCaptured != null) {
+                onPhotoCaptured.accept(imagePath);
+            }
         }
     }
 
-    /**
-     * Converts OpenCV Mat to Java's BufferedImage
-     */
     private BufferedImage matToBufferedImage(Mat mat) {
         int type = (mat.channels() > 1) ? BufferedImage.TYPE_3BYTE_BGR : BufferedImage.TYPE_BYTE_GRAY;
         int bufferSize = mat.channels() * mat.cols() * mat.rows();

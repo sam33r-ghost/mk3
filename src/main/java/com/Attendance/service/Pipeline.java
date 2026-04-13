@@ -1,10 +1,15 @@
-package com.Attendance.vision;
+package com.Attendance.service;
 
 import ai.djl.ModelException;
 import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.ImageFactory;
 import ai.djl.modality.cv.output.DetectedObjects;
 import ai.djl.translate.TranslateException;
+import com.Attendance.database.loadData;
+import com.Attendance.model.Student;
+import com.Attendance.vision.FaceEncoder;
+import com.Attendance.vision.RetinaFaceDetection;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -15,21 +20,23 @@ import java.nio.file.Path;
 import java.io.*;
 import java.sql.*;
 
+import static com.Attendance.service.ImageSplice.splice;
 import static com.Attendance.vision.FaceEncoder.encodeFace;
 import static com.Attendance.vision.FaceEncoder.isSamePerson;
-import static com.Attendance.vision.ImageSplice.splice;
-import static com.Attendance.vision.loadData.loadStudents;
+import static com.Attendance.service.ImageSplice.splice;
+import static com.Attendance.database.loadData.loadStudents;
 
 public class Pipeline {
-    public static void pipe(String pathString) throws Exception {
+    public static List<Integer> pipe(String pathString) throws Exception {
         Path path = Paths.get(pathString);
         DetectedObjects detection = RetinaFaceDetection.predict(path);
         splice(pathString,detection);
         List<Student> studentlist = loadData.loadStudents();
         System.out.println("students extracted");
-
+        List<Integer> presentRolls = new ArrayList<>();
         int faceCounter =0;
 ; // Required for comparing byte arrays
+
 
         int l=0;
                     while(l< detection.getNumberOfObjects())
@@ -39,7 +46,7 @@ public class Pipeline {
 
                         if (studentlist.isEmpty()) {
                             System.out.println("No students found in the database.");
-                            return;
+                            return presentRolls;
                         }
 
                         // 4. Iterate through the ArrayList using a for-each loop
@@ -66,17 +73,17 @@ public class Pipeline {
                             System.out.println("Roll Number: " + roll);
                             System.out.println("Student Name: " + name);
                             System.out.println(l);
+                            presentRolls.add(roll);
 
                             matchFound = true;
 
                             // Stop searching once we find our match to save processing time
                             break;
+
                         }
                     }
                         l++;
                     }
-
-
             String folderPath= "extracted_faces";
         File folder = new File(folderPath);
 
@@ -89,6 +96,8 @@ public class Pipeline {
                             name.toLowerCase().endsWith(".png") ||
                             name.toLowerCase().endsWith(".jpeg")
             );
+
+
 
             if (photoFiles != null) {
                 // Loop through the array and delete each file
@@ -103,6 +112,8 @@ public class Pipeline {
         } else {
             System.err.println("Folder does not exist or is not a directory.");
         }
+        System.out.println("done");
+        return presentRolls;
         }
-
     }
+

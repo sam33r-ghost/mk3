@@ -1,4 +1,4 @@
-package com.Attendance.vision;
+package com.Attendance.service;
 
 import ai.djl.modality.cv.output.DetectedObjects;
 import ai.djl.modality.cv.Image;

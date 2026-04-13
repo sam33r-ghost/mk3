@@ -1,18 +1,18 @@
 package com.Attendance.model;
 
-public class Student extends User{
-    byte[] faceEncoding;
-    byte [] getFaceEncoding()
-    {
-        return faceEncoding;
-    };
+public class Student {
+    private int rollNo; // Use String if your roll numbers contain letters
+    private String name;
+    private byte[] fileData; // This holds the byte array (e.g., an image or document)
 
-    public void setFaceEncoding(byte[] faceEncoding) {
-        this.faceEncoding = faceEncoding;
+    public Student(int rollNo, String name, byte[] fileData) {
+        this.rollNo = rollNo;
+        this.name = name;
+        this.fileData = fileData;
     }
 
-    @Override
-    public Role getRole() {
-        return Role.STUDENT;
-    }
+    // Getters
+    public int getRollNo() { return rollNo; }
+    public String getName() { return name; }
+    public byte[] getFileData() { return fileData; }
 }

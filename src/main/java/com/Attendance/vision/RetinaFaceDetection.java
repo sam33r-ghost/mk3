@@ -1,16 +1,5 @@
 package com.Attendance.vision;
-/*
- * Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- * with the License. A copy of the License is located at
- *
- * http://aws.amazon.com/apache2.0/
- *
- * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
- * OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
- */
+
 
 import ai.djl.ModelException;
 import ai.djl.inference.Predictor;
@@ -30,24 +19,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * An example of inference using a face detection model.
- *
- * <p>See this <a
- * href="https://github.com/deepjavalibrary/djl/blob/master/examples/docs/face_detection.md">doc</a>
- * for information about this example.
- */
+
 public final class RetinaFaceDetection {
 
     private static final Logger logger = LoggerFactory.getLogger(RetinaFaceDetection.class);
 
     private RetinaFaceDetection() {}
-
-   /* public static void main(String[] args) throws IOException, ModelException, TranslateException {
-        DetectedObjects detection = RetinaFaceDetection.predict();
-        System.out.println(detection);
-        logger.info("{}", detection);
-    }*/
 
     public static DetectedObjects predict(Path i) throws IOException, ModelException, TranslateException {
 
