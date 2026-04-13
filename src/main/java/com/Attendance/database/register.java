@@ -1,5 +1,6 @@
 package com.Attendance.database;
 
+import com.Attendance.ui.AttendanceSystem;
 import com.Attendance.vision.FaceEncoder;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class register extends JFrame {
     public static final String DB_URL = "jdbc:mysql://localhost:3306/vision";
     public static final String USER = "root";
     public static final String PASS = "root";
-    public static final String PHOTO_FOLDER_PATH = "D:\\College\\Semester 2\\OOPs\\VisionAttendanceM\\extracted"; // Example path
+    public static final String PHOTO_FOLDER_PATH = "extracted"; // Example path
 
     // --- State Variables ---
     public File[] photoFiles;
@@ -66,6 +67,24 @@ public class register extends JFrame {
         if (photoFiles == null || photoFiles.length == 0) {
             JOptionPane.showMessageDialog(this, "No photos found in: " + PHOTO_FOLDER_PATH);
             System.exit(0);
+        }
+    }
+
+    public static boolean registerProfessor(String name, String email, String password) {
+        String sql = "INSERT INTO professors (name, email, password) VALUES (?, ?, ?)";
+        try (Connection con = DB.connect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name.trim());
+            ps.setString(2, email.trim());
+            ps.setString(3, password); // Note: In production, hash this password!
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) { // MySQL error code for duplicate entry
+                JOptionPane.showMessageDialog(null, "An account with this email already exists!", "Registration Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Registration Error", JOptionPane.ERROR_MESSAGE);
+            }
+            return false;
         }
     }
 
@@ -174,6 +193,19 @@ public class register extends JFrame {
             throw new RuntimeException(e);
         }
     }
+
+    public static void registerStudent(int rollNo, String name, String email, String password, byte[] faceData) throws SQLException {
+        String sql = "INSERT INTO students (roll_no, name, email, password, profile_picture) VALUES (?, ?, ?, ?, ?)";
+        try (Connection con = DB.connect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, rollNo);
+            ps.setString(2, name);
+            ps.setString(3, email);
+            ps.setString(4, password);
+            ps.setBytes(5, faceData);
+            ps.executeUpdate();
+        }
+    }
+
 
     public void saveToDatabase(byte[] photo, String name, int rollNo, String email, String password) {
         String sql = "INSERT INTO students (profile_picture, name, roll_no, email, password) VALUES (?, ?, ?, ?, ?)";
