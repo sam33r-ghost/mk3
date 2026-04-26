@@ -138,4 +138,54 @@ public class FaceEncoder {
         for (int i = 0; i < vec.length; i++) out[i] = (float) (vec[i] / norm);
         return out;
     }
+    /**
+     * NEW: Encodes a face directly from an in-memory OpenCV Mat (Zero disk I/O)
+     */
+    public static byte[] encodeFaceFromMat(Mat faceMat) throws Exception {
+        float[] embedding = getEmbeddingFromMat(faceMat);
+        ByteBuffer buffer = ByteBuffer.allocate(embedding.length * 4);
+        for (float f : embedding) buffer.putFloat(f);
+        return buffer.array();
+    }
+
+    /**
+     * NEW: Generates embedding directly from an in-memory OpenCV Mat
+     */
+    public static float[] getEmbeddingFromMat(Mat faceMat) throws Exception {
+        if (faceMat.empty()) {
+            throw new IllegalArgumentException("Provided Mat is empty.");
+        }
+
+        // 2. Resize to 112×112
+        Mat resized = new Mat();
+        Imgproc.resize(faceMat, resized, new Size(IMG_SIZE, IMG_SIZE));
+
+        // 3. BGR → RGB
+        Mat rgb = new Mat();
+        Imgproc.cvtColor(resized, rgb, Imgproc.COLOR_BGR2RGB);
+
+        // 4. Normalize: (pixel - 127.5) / 128.0
+        rgb.convertTo(rgb, CvType.CV_32F);
+        Core.subtract(rgb, new Scalar(127.5, 127.5, 127.5), rgb);
+        Core.divide(rgb, new Scalar(128.0, 128.0, 128.0), rgb);
+
+        // 5. HWC → NCHW [1, 3, 112, 112]
+        float[] nchw = hwcToNchw(rgb);
+
+        // 6. Create input tensor
+        long[] shape = {1, 3, IMG_SIZE, IMG_SIZE};
+        OnnxTensor inputTensor = OnnxTensor.createTensor(
+                env, FloatBuffer.wrap(nchw), shape);
+
+        // 7. Run inference
+        String inputName = session.getInputNames().iterator().next();
+        OrtSession.Result result = session.run(
+                Collections.singletonMap(inputName, inputTensor));
+
+        // 8. Extract [1, 512] output
+        float[][] output = (float[][]) ((OnnxTensor) result.get(0)).getValue();
+
+        // 9. L2-normalize and return
+        return l2Normalize(output[0]);
+    }
 }
