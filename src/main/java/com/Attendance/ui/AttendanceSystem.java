@@ -5,26 +5,12 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import com.Attendance.database.DB;
-import com.Attendance.vision.*;
-import com.Attendance.service.Pipeline;
-import com.Attendance.model.Student;
-import com.Attendance.database.loadData;
-
-import static com.Attendance.database.register.registerProfessor;
 import static com.Attendance.ui.showUI.*;
 
 
 public class  AttendanceSystem {
 
-    // ── Database Configuration ────────────────────────────────────────────────
-    static final String DB_URL  = "jdbc:mysql://localhost:3306/vision";
     public static final String DB_USER = "root";
     public static final String DB_PASS = "root";
 

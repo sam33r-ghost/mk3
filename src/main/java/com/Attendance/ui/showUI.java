@@ -6,7 +6,6 @@ import com.Attendance.database.register;
 import com.Attendance.model.SessionRecord;
 import com.Attendance.model.Student;
 import com.Attendance.service.Pipeline;
-import com.Attendance.vision.FaceEncoder;
 import com.Attendance.vision.WebcamApp;
 
 import javax.swing.*;
@@ -20,14 +19,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.Attendance.database.register.registerProfessor;
-import static com.Attendance.database.register.registerStudent;
 import static com.Attendance.ui.AttendanceSystem.*;
 
 

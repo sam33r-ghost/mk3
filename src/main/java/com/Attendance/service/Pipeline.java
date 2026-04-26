@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.List;
-import ai.djl.engine.Engine;
 
 public class Pipeline {
     static {

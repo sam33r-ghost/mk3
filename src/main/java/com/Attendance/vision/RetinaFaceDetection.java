@@ -1,7 +1,6 @@
 package com.Attendance.vision;
 
 import ai.djl.Device;
-import ai.djl.ModelException;
 import ai.djl.engine.Engine;
 import ai.djl.inference.Predictor;
 import ai.djl.modality.cv.Image;
@@ -10,7 +9,6 @@ import ai.djl.modality.cv.output.DetectedObjects;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.ZooModel;
 import ai.djl.training.util.ProgressBar;
-import ai.djl.translate.TranslateException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
